@@ -53,3 +53,15 @@ def calc_meanfield_montecarlo(P,R,c,p,init,b):
 
     return (overlap,cor)
 
+def calc_meanfield_montecarlo_meannorm(P,R,c,p,init,b):
+    #possible combination of patterns 
+    pattern=(numpy.random.rand(R, P)<p).astype(numpy.float)
+    pattern=pattern-numpy.sum(pattern,axis=1,keepdims=True)/P
+
+    #calculate overlaps
+    sol=scipy.optimize.root(overlap_eq, x0=init, method="lm", args=(pattern, c,p*(1-p),R,b))
+    overlap=sol.x
+    cor=calc_cor(overlap,pattern,P,R,c,p,b)
+
+    return (overlap,cor)
+
